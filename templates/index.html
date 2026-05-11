@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoiceCalc</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-from: #0d0d1a;
+      --bg-to: #131326;
+      --surface: rgba(22, 22, 48, 0.85);
+      --surface2: rgba(30, 30, 60, 0.6);
+      --border: rgba(99, 102, 241, 0.2);
+      --accent: #6366f1;
+      --accent2: #8b5cf6;
+      --text: #f0f0ff;
+      --text-dim: #7b7ba8;
+      --green: #10b981;
+      --red: #f87171;
+      --btn-num-bg: #1e1e42;
+      --btn-num-hover: #2a2a58;
+      --btn-op-bg: #2d1f5e;
+      --btn-op-hover: #3d2a7a;
+      --btn-sci-bg: #1f2d5e;
+      --btn-sci-hover: #2a3d7a;
+      --btn-eq-bg: #065f46;
+      --btn-eq-hover: #047857;
+      --btn-clear-bg: #7f1d1d;
+      --btn-clear-hover: #991b1b;
+      --btn-action-bg: #312e81;
+      --btn-action-hover: #3730a3;
+    }
+
+    body {
+      background: radial-gradient(ellipse at 30% 20%, #1a1040 0%, var(--bg-from) 60%),
+                  linear-gradient(160deg, var(--bg-from) 0%, var(--bg-to) 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .wrapper { width: 100%; max-width: 390px; }
+
+    /* Header */
+    header { text-align: center; margin-bottom: 24px; }
+    header h1 {
+      font-family: 'DM Mono', monospace;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    header h1 span { color: var(--accent); }
+
+    /* Card */
+    .calc {
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.03) inset,
+        0 40px 80px rgba(0,0,0,0.5),
+        0 0 60px rgba(99,102,241,0.08);
+    }
+
+    /* Display */
+    .display {
+      padding: 24px 22px 18px;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: rgba(8, 8, 20, 0.6);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .expr-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      min-height: 18px;
+      word-break: break-all;
+      transition: color 0.2s;
+    }
+    .expr-line.error { color: var(--red); }
+    .result-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      word-break: break-all;
+      line-height: 1.15;
+      margin-top: 2px;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .result-line.flash {
+      animation: flash 0.25s ease;
+    }
+    @keyframes flash {
+      0%   { opacity: 1; transform: scale(1); }
+      40%  { opacity: 0.5; transform: scale(0.97); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Voice bar */
+    .voice-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .voice-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .voice-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .voice-btn.listening {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      background: rgba(139,92,246,0.12);
+      animation: mic-pulse 1.4s ease infinite;
+    }
+    @keyframes mic-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(139,92,246,0.5); }
+      50%       { box-shadow: 0 0 0 7px rgba(139,92,246,0); }
+    }
+    .voice-text {
+      flex: 1;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .voice-text.active  { color: var(--accent2); }
+    .voice-text.success { color: var(--green); }
+    .voice-text.error   { color: var(--red); }
+
+    /* Toolbar (sci toggle + clear history) */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+      gap: 8px;
+    }
+    .toolbar-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .toolbar-btn:hover { background: rgba(99,102,241,0.12); color: var(--text); border-color: var(--accent); }
+    .toolbar-btn.active { background: rgba(99,102,241,0.2); color: var(--accent); border-color: var(--accent); }
+
+    /* History */
+    .history-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      border-bottom: 0px solid var(--border);
+      background: rgba(8,8,20,0.4);
+    }
+    .history-panel.open {
+      max-height: 130px;
+      border-bottom: 1px solid var(--border);
+    }
+    .history-inner {
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      overflow-y: auto;
+      max-height: 130px;
+    }
+    .history-empty {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      padding: 4px 0;
+    }
+    .history-item {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+      transition: background 0.15s;
+    }
+    .history-item:hover { background: rgba(99,102,241,0.1); }
+    .history-item .h-expr { color: var(--accent); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .history-item .h-eq   { color: var(--text-dim); }
+    .history-item .h-res  { color: var(--green); }
+
+    /* Button grid */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(99,102,241,0.07);
+    }
+    .btn {
+      border: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding: 18px 0;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s, transform 0.1s;
+      color: var(--text);
+      background: var(--btn-num-bg);
+    }
+    .btn:hover  { background: var(--btn-num-hover); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    /* Ripple */
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.07);
+      opacity: 0;
+      transition: opacity 0.1s;
+    }
+    .btn:active::after { opacity: 1; }
+
+    .btn.op     { background: var(--btn-op-bg); }
+    .btn.op:hover { background: var(--btn-op-hover); }
+
+    .btn.sci    { background: var(--btn-sci-bg); font-size: 0.88rem; }
+    .btn.sci:hover { background: var(--btn-sci-hover); }
+
+    .btn.action { background: var(--btn-action-bg); }
+    .btn.action:hover { background: var(--btn-action-hover); }
+
+    .btn.clear  { background: var(--btn-clear-bg); }
+    .btn.clear:hover { background: var(--btn-clear-hover); }
+
+    .btn.equals { background: var(--btn-eq-bg); font-size: 1.3rem; }
+    .btn.equals:hover { background: var(--btn-eq-hover); }
+
+    .btn.span2  { grid-column: span 2; }
+
+    /* No-voice notice */
+    .no-voice-notice {
+      display: none;
+      padding: 8px 16px;
+      font-size: 0.72rem;
+      color: var(--red);
+      text-align: center;
+      background: rgba(248,113,113,0.06);
+      border-bottom: 1px solid var(--border);
+      font-family: 'DM Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <header><h1>Voice<span>Calc</span></h1></header>
+
+  <div class="calc">
+
+    <!-- Display -->
+    <div class="display">
+      <div class="expr-line" id="exprEl"></div>
+      <div class="result-line" id="resultEl">0</div>
+    </div>
+
+    <!-- Voice bar -->
+    <div class="voice-bar">
+      <button class="voice-btn" id="voiceBtn" title="Start voice input" aria-label="Voice input">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </button>
+      <div class="voice-text" id="voiceText">Tap mic — say "five plus three"</div>
+    </div>
+
+    <div class="no-voice-notice" id="noVoiceNotice">Voice input not supported. Use Chrome or Edge.</div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <button class="toolbar-btn" id="sciToggle">SCI MODE</button>
+      <button class="toolbar-btn" id="historyToggle">HISTORY</button>
+      <button class="toolbar-btn" id="clearHistory">CLEAR HIST</button>
+    </div>
+
+    <!-- History panel -->
+    <div class="history-panel" id="historyPanel">
+      <div class="history-inner" id="historyInner">
+        <div class="history-empty">No history yet.</div>
+      </div>
+    </div>
+
+    <!-- Basic buttons -->
+    <div class="btn-grid" id="basicGrid">
+      <button class="btn action" data-action="del">DEL</button>
+      <button class="btn action clear" data-action="clear">AC</button>
+      <button class="btn action" data-action="pct">%</button>
+      <button class="btn op" data-val="/">÷</button>
+
+      <button class="btn" data-val="7">7</button>
+      <button class="btn" data-val="8">8</button>
+      <button class="btn" data-val="9">9</button>
+      <button class="btn op" data-val="*">×</button>
+
+      <button class="btn" data-val="4">4</button>
+      <button class="btn" data-val="5">5</button>
+      <button class="btn" data-val="6">6</button>
+      <button class="btn op" data-val="-">−</button>
+
+      <button class="btn" data-val="1">1</button>
+      <button class="btn" data-val="2">2</button>
+      <button class="btn" data-val="3">3</button>
+      <button class="btn op" data-val="+">+</button>
+
+      <button class="btn span2" data-val="0">0</button>
+      <button class="btn" data-val=".">.</button>
+      <button class="btn equals" data-action="eq">=</button>
+    </div>
+
+    <!-- Scientific buttons (hidden by default) -->
+    <div class="btn-grid" id="sciGrid" style="display:none">
+      <button class="btn action" data-action="del">DEL</button>
+      <button class="btn action clear" data-action="clear">AC</button>
+      <button class="btn action" data-action="pct">%</button>
+      <button class="btn op" data-val="/">÷</button>
+
+      <button class="btn sci" data-func="sin">sin</button>
+      <button class="btn sci" data-func="cos">cos</button>
+      <button class="btn sci" data-func="tan">tan</button>
+      <button class="btn op" data-val="*">×</button>
+
+      <button class="btn sci" data-func="log">log</button>
+      <button class="btn sci" data-func="ln">ln</button>
+      <button class="btn sci" data-func="sqrt">√</button>
+      <button class="btn op" data-val="-">−</button>
+
+      <button class="btn sci" data-func="abs">|x|</button>
+      <button class="btn sci" data-const="pi">π</button>
+      <button class="btn sci" data-const="e">e</button>
+      <button class="btn op" data-val="+">+</button>
+
+      <button class="btn" data-val="("> ( </button>
+      <button class="btn" data-val=")"> ) </button>
+      <button class="btn op" data-val="^">xʸ</button>
+      <button class="btn equals" data-action="eq">=</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const exprEl    = document.getElementById('exprEl');
+  const resultEl  = document.getElementById('resultEl');
+  const voiceBtn  = document.getElementById('voiceBtn');
+  const voiceText = document.getElementById('voiceText');
+
+  let current = '';
+  let justEvaluated = false;
+
+  // ── Display ──────────────────────────────────────────────────────────────
+  function setDisplay(expr, result, isError = false) {
+    exprEl.textContent = expr;
+    exprEl.className = 'expr-line' + (isError ? ' error' : '');
+    resultEl.textContent = result;
+    resultEl.classList.remove('flash');
+    void resultEl.offsetWidth; // reflow to restart animation
+    resultEl.classList.add('flash');
+  }
+
+  // ── Input ─────────────────────────────────────────────────────────────────
+  function append(val) {
+    const isOperator = '+-*/^'.includes(val);
+    if (justEvaluated) {
+      // After a result: operator continues from result, digit starts fresh
+      if (!isOperator) current = '';
+      justEvaluated = false;
+    }
+    current += val;
+    setDisplay(current, current || '0');
+  }
+
+  function appendFunc(fn) {
+    if (justEvaluated) { current = ''; justEvaluated = false; }
+    current += fn + '(';
+    setDisplay(current, current || '0');
+  }
+
+  function appendConst(c) {
+    if (justEvaluated) { current = ''; justEvaluated = false; }
+    current += c;
+    setDisplay(current, current || '0');
+  }
+
+  // ── Calculate ─────────────────────────────────────────────────────────────
+  async function calculate() {
+    if (!current) return;
+    const expr = current;
+    try {
+      const res  = await fetch('/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ expression: expr })
+      });
+      const data = await res.json();
+      if (data.error) {
+        setDisplay(expr, data.error, true);
+        current = '';
+      } else {
+        setDisplay(expr + ' =', String(data.result));
+        current = String(data.result);
+        justEvaluated = true;
+        addHistory(expr, data.result);
+      }
+    } catch {
+      setDisplay(expr, 'Connection error', true);
+    }
+  }
+
+  // ── History ───────────────────────────────────────────────────────────────
+  let history = [];
+  try { history = JSON.parse(localStorage.getItem('vcHistory') || '[]'); } catch {}
+
+  const historyInner  = document.getElementById('historyInner');
+  const historyPanel  = document.getElementById('historyPanel');
+  const historyToggle = document.getElementById('historyToggle');
+  const clearHistBtn  = document.getElementById('clearHistory');
+
+  function renderHistory() {
+    if (!history.length) {
+      historyInner.innerHTML = '<div class="history-empty">No history yet.</div>';
+      return;
+    }
+    historyInner.innerHTML = '';
+    history.forEach((h, i) => {
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.innerHTML =
+        `<span class="h-expr">${escHtml(String(h.expr))}</span>` +
+        `<span class="h-eq">=</span>` +
+        `<span class="h-res">${escHtml(String(h.result))}</span>`;
+      item.addEventListener('click', () => {
+        current = String(h.result);
+        justEvaluated = true;
+        setDisplay(h.expr + ' =', String(h.result));
+      });
+      historyInner.appendChild(item);
+    });
+  }
+
+  function addHistory(expr, result) {
+    history.unshift({ expr, result });
+    if (history.length > 20) history.length = 20;
+    try { localStorage.setItem('vcHistory', JSON.stringify(history)); } catch {}
+    renderHistory();
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  historyToggle.addEventListener('click', () => {
+    const open = historyPanel.classList.toggle('open');
+    historyToggle.classList.toggle('active', open);
+  });
+
+  clearHistBtn.addEventListener('click', () => {
+    history = [];
+    try { localStorage.removeItem('vcHistory'); } catch {}
+    renderHistory();
+  });
+
+  renderHistory();
+
+  // ── Sci toggle ────────────────────────────────────────────────────────────
+  const sciToggle = document.getElementById('sciToggle');
+  const basicGrid = document.getElementById('basicGrid');
+  const sciGrid   = document.getElementById('sciGrid');
+  let sciMode = false;
+
+  sciToggle.addEventListener('click', () => {
+    sciMode = !sciMode;
+    basicGrid.style.display = sciMode ? 'none' : 'grid';
+    sciGrid.style.display   = sciMode ? 'grid' : 'none';
+    sciToggle.classList.toggle('active', sciMode);
+  });
+
+  // ── Button handler ────────────────────────────────────────────────────────
+  function handleBtn(btn) {
+    const { val, action, func } = btn.dataset;
+    const c = btn.dataset.const;
+
+    if (val !== undefined)    { append(val); }
+    else if (func !== undefined) { appendFunc(func); }
+    else if (c !== undefined) { appendConst(c); }
+    else if (action === 'eq')    { calculate(); }
+    else if (action === 'del')   {
+      current = current.slice(0, -1);
+      justEvaluated = false;
+      setDisplay(current, current || '0');
+    }
+    else if (action === 'clear') {
+      current = '';
+      justEvaluated = false;
+      setDisplay('', '0');
+    }
+    else if (action === 'pct') {
+      // Only apply % to a trailing number, not the whole expression
+      const m = current.match(/^(.*?)(-?\d*\.?\d+)$/);
+      if (m) {
+        current = m[1] + String(parseFloat(m[2]) / 100);
+        setDisplay(current, current);
+      }
+    }
+  }
+
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', () => handleBtn(btn));
+  });
+
+  // ── Keyboard ──────────────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if ('0123456789.+-*/()^'.includes(e.key)) { append(e.key); }
+    else if (e.key === 'Enter' || e.key === '=') { calculate(); }
+    else if (e.key === 'Backspace') {
+      current = current.slice(0, -1);
+      justEvaluated = false;
+      setDisplay(current, current || '0');
+    }
+    else if (e.key === 'Escape') {
+      current = '';
+      justEvaluated = false;
+      setDisplay('', '0');
+    }
+  });
+
+  // ── Voice ─────────────────────────────────────────────────────────────────
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    voiceBtn.disabled = true;
+    voiceBtn.style.opacity = '0.3';
+    document.getElementById('noVoiceNotice').style.display = 'block';
+  } else {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+    let listening = false;
+
+    recognition.onstart = () => {
+      listening = true;
+      voiceBtn.classList.add('listening');
+      voiceText.textContent = 'Listening…';
+      voiceText.className = 'voice-text active';
+    };
+
+    recognition.onresult = async (e) => {
+      const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+      if (!e.results[e.results.length - 1].isFinal) {
+        voiceText.textContent = transcript + '…';
+        return;
+      }
+      voiceText.textContent = `"${transcript}"`;
+      try {
+        const res  = await fetch('/voice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ transcript })
+        });
+        const data = await res.json();
+        if (data.error) {
+          voiceText.textContent = `Couldn't parse: "${transcript}"`;
+          voiceText.className = 'voice-text error';
+        } else {
+          current = String(data.result);
+          justEvaluated = true;
+          setDisplay(data.expression + ' =', String(data.result));
+          addHistory(data.expression, data.result);
+          voiceText.textContent = `✓ ${data.expression} = ${data.result}`;
+          voiceText.className = 'voice-text success';
+          setTimeout(() => {
+            voiceText.textContent = 'Tap mic — say "five plus three"';
+            voiceText.className = 'voice-text';
+          }, 3000);
+        }
+      } catch {
+        voiceText.textContent = 'Connection error';
+        voiceText.className = 'voice-text error';
+      }
+    };
+
+    recognition.onerror = (e) => {
+      voiceText.textContent = e.error === 'not-allowed' ? 'Mic access denied' : 'Voice error — try again';
+      voiceText.className = 'voice-text error';
+    };
+
+    recognition.onend = () => {
+      listening = false;
+      voiceBtn.classList.remove('listening');
+    };
+
+    voiceBtn.addEventListener('click', () => {
+      if (listening) recognition.stop();
+      else try { recognition.start(); } catch {}
+    });
+  }
+</script>
+</body>
+</html>
