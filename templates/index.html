@@ -9,7 +9,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      /* OneUI 8.5 inspired soft gradients */
+      /* OneUI 8.5 inspired soft gradients - Light Mode */
       --bg-from: #f5f5f7;
       --bg-to: #e8e8ed;
       --surface: rgba(255, 255, 255, 0.85);
@@ -35,6 +35,66 @@
       --btn-action-hover: #dce0ff;
     }
 
+    /* Dark Mode Colors */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-from: #0d0d1a;
+        --bg-to: #1a1a2e;
+        --surface: rgba(20, 20, 40, 0.9);
+        --surface2: rgba(25, 25, 45, 0.95);
+        --border: rgba(255, 255, 255, 0.08);
+        --accent: #5a9fff;
+        --accent2: #8b7aff;
+        --text: #f0f0ff;
+        --text-dim: #b0b0c0;
+        --green: #4fc85f;
+        --red: #ff6b7a;
+        --btn-num-bg: #1a1a3a;
+        --btn-num-hover: #242450;
+        --btn-op-bg: #2a1a4a;
+        --btn-op-hover: #3a2a5a;
+        --btn-sci-bg: #1a2a4a;
+        --btn-sci-hover: #2a3a5a;
+        --btn-eq-bg: #1a3a3a;
+        --btn-eq-hover: #2a4a4a;
+        --btn-clear-bg: #3a1a1a;
+        --btn-clear-hover: #4a2a2a;
+        --btn-action-bg: #1a1a5a;
+        --btn-action-hover: #2a2a7a;
+      }
+    }
+
+    /* Force dark mode with data attribute */
+    html.dark-mode {
+      color-scheme: dark;
+    }
+
+    html.dark-mode :root {
+      --bg-from: #0d0d1a;
+      --bg-to: #1a1a2e;
+      --surface: rgba(20, 20, 40, 0.9);
+      --surface2: rgba(25, 25, 45, 0.95);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #5a9fff;
+      --accent2: #8b7aff;
+      --text: #f0f0ff;
+      --text-dim: #b0b0c0;
+      --green: #4fc85f;
+      --red: #ff6b7a;
+      --btn-num-bg: #1a1a3a;
+      --btn-num-hover: #242450;
+      --btn-op-bg: #2a1a4a;
+      --btn-op-hover: #3a2a5a;
+      --btn-sci-bg: #1a2a4a;
+      --btn-sci-hover: #2a3a5a;
+      --btn-eq-bg: #1a3a3a;
+      --btn-eq-hover: #2a4a4a;
+      --btn-clear-bg: #3a1a1a;
+      --btn-clear-hover: #4a2a2a;
+      --btn-action-bg: #1a1a5a;
+      --btn-action-hover: #2a2a7a;
+    }
+
     body {
       background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
       background-attachment: fixed;
@@ -50,7 +110,15 @@
     .wrapper { width: 100%; max-width: 390px; }
 
     /* Header */
-    header { text-align: center; margin-bottom: 32px; }
+    header { 
+      text-align: center; 
+      margin-bottom: 32px; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      position: relative;
+    }
     header h1 {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 1.75rem;
@@ -59,6 +127,40 @@
       color: var(--text);
     }
     header h1 span { color: var(--accent); }
+
+    /* Dark mode toggle */
+    .theme-toggle {
+      position: absolute;
+      right: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(11, 92, 255, 0.1);
+      color: var(--accent);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover {
+      background: rgba(11, 92, 255, 0.15);
+      transform: scale(1.05);
+    }
+    .theme-toggle:active {
+      transform: scale(0.95);
+    }
+    .theme-toggle svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
     /* Card */
     .calc {
@@ -329,7 +431,13 @@
 <body>
 
 <div class="wrapper">
-  <header><h1>Voice<span>Calc</span></h1></header>
+  <header>
+    <h1>Voice<span>Calc</span></h1>
+    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Dark mode toggle">
+      <svg id="sunIcon" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </header>
 
   <div class="calc">
 
@@ -683,6 +791,45 @@
       else try { recognition.start(); } catch {}
     });
   }
+
+  // ── Dark Mode ──────────────────────────────────────────────────────────────
+  const themeToggle = document.getElementById('themeToggle');
+  const sunIcon = document.getElementById('sunIcon');
+  const moonIcon = document.getElementById('moonIcon');
+
+  // Initialize dark mode from localStorage
+  function initDarkMode() {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true' || 
+                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && 
+                       localStorage.getItem('darkMode') !== 'false');
+    
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark-mode');
+      sunIcon.style.display = 'block';
+      moonIcon.style.display = 'none';
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'block';
+    }
+  }
+
+  // Toggle dark mode
+  themeToggle.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+    
+    if (isDark) {
+      sunIcon.style.display = 'block';
+      moonIcon.style.display = 'none';
+    } else {
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'block';
+    }
+  });
+
+  // Initialize on load
+  initDarkMode();
 </script>
 </body>
 </html>
