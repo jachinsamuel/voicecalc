@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VoiceCalc</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
-      /* OneUI 8.5 inspired soft gradients - Light Mode */
       --bg-from: #f5f5f7;
       --bg-to: #e8e8ed;
       --surface: rgba(255, 255, 255, 0.85);
@@ -36,7 +42,7 @@
     }
 
     /* Dark Mode Colors */
-    @media (prefers-color-scheme: dark) {
+    @media (prefers-color-scheme: light) {
       :root {
         --bg-from: #0d0d1a;
         --bg-to: #1a1a2e;
@@ -48,7 +54,7 @@
         --text: #f0f0ff;
         --text-dim: #b0b0c0;
         --green: #4fc85f;
-        --red: #ff6b7a;
+        --red: #fc6271;
         --btn-num-bg: #1a1a3a;
         --btn-num-hover: #242450;
         --btn-op-bg: #2a1a4a;
@@ -64,12 +70,9 @@
       }
     }
 
-    /* Force dark mode with data attribute */
+    /* Force dark mode with class on html element */
     html.dark-mode {
       color-scheme: dark;
-    }
-
-    html.dark-mode :root {
       --bg-from: #0d0d1a;
       --bg-to: #1a1a2e;
       --surface: rgba(20, 20, 40, 0.9);
@@ -107,18 +110,22 @@
       padding: 20px;
     }
 
-    .wrapper { width: 100%; max-width: 390px; }
+    .wrapper {
+      width: 100%;
+      max-width: 390px;
+    }
 
     /* Header */
-    header { 
-      text-align: center; 
-      margin-bottom: 32px; 
+    header {
+      text-align: center;
+      margin-bottom: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 16px;
       position: relative;
     }
+
     header h1 {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 1.75rem;
@@ -126,41 +133,33 @@
       letter-spacing: -0.5px;
       color: var(--text);
     }
-    header h1 span { color: var(--accent); }
 
-    /* Dark mode toggle */
+    header h1 span {
+      color: var(--accent);
+    }
+
     .theme-toggle {
       position: absolute;
-      right: 0;
+      left: 50%;
       width: 44px;
       height: 44px;
-      border-radius: 50%;
-      border: none;
-      background: rgba(11, 92, 255, 0.1);
-      color: var(--accent);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.2s, transform 0.1s;
-      flex-shrink: 0;
+      background: none;
+      border: none;
     }
+
+
     .theme-toggle:hover {
-      background: rgba(11, 92, 255, 0.15);
       transform: scale(1.05);
     }
-    .theme-toggle:active {
-      transform: scale(0.95);
+
+    .theme-toggle.active {
+      background: none;
     }
-    .theme-toggle svg {
-      width: 24px;
-      height: 24px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
+
 
     /* Card */
     .calc {
@@ -186,6 +185,7 @@
       border-bottom: 1px solid var(--border);
       position: relative;
     }
+
     .expr-line {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 0.95rem;
@@ -195,7 +195,11 @@
       transition: color 0.2s;
       font-weight: 500;
     }
-    .expr-line.error { color: var(--red); }
+
+    .expr-line.error {
+      color: var(--red);
+    }
+
     .result-line {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 2.8rem;
@@ -207,13 +211,26 @@
       transition: opacity 0.15s, transform 0.15s;
       color: var(--text);
     }
+
     .result-line.flash {
       animation: flash 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+
     @keyframes flash {
-      0%   { opacity: 1; transform: scale(1); }
-      50%  { opacity: 0.7; transform: scale(0.96); }
-      100% { opacity: 1; transform: scale(1); }
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.7;
+        transform: scale(0.96);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     /* Voice bar */
@@ -225,6 +242,7 @@
       border-bottom: 1px solid var(--border);
       background: var(--surface2);
     }
+
     .voice-btn {
       width: 44px;
       height: 44px;
@@ -240,21 +258,35 @@
       transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
       box-shadow: 0 4px 12px rgba(11, 92, 255, 0.3);
     }
-    .voice-btn:hover { 
+
+    .voice-btn:hover {
       background: #0a4dcc;
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(11, 92, 255, 0.35);
     }
-    .voice-btn:active { transform: translateY(0); }
+
+    .voice-btn:active {
+      transform: translateY(0);
+    }
+
     .voice-btn.listening {
       background: var(--accent2);
       box-shadow: 0 4px 12px rgba(106, 90, 255, 0.3);
       animation: mic-pulse 1.2s ease infinite;
     }
+
     @keyframes mic-pulse {
-      0%, 100% { box-shadow: 0 4px 12px rgba(106, 90, 255, 0.3); }
-      50% { box-shadow: 0 6px 24px rgba(106, 90, 255, 0.5); }
+
+      0%,
+      100% {
+        box-shadow: 0 4px 12px rgba(106, 90, 255, 0.3);
+      }
+
+      50% {
+        box-shadow: 0 6px 24px rgba(106, 90, 255, 0.5);
+      }
     }
+
     .voice-text {
       flex: 1;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -265,9 +297,18 @@
       white-space: nowrap;
       font-weight: 500;
     }
-    .voice-text.active  { color: var(--accent2); }
-    .voice-text.success { color: var(--green); }
-    .voice-text.error   { color: var(--red); }
+
+    .voice-text.active {
+      color: var(--accent2);
+    }
+
+    .voice-text.success {
+      color: var(--green);
+    }
+
+    .voice-text.error {
+      color: var(--red);
+    }
 
     /* Toolbar (sci toggle + clear history) */
     .toolbar {
@@ -279,6 +320,7 @@
       background: var(--surface2);
       gap: 8px;
     }
+
     .toolbar-btn {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 0.76rem;
@@ -292,13 +334,15 @@
       cursor: pointer;
       transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
     }
-    .toolbar-btn:hover { 
+
+    .toolbar-btn:hover {
       background: rgba(11, 92, 255, 0.08);
       color: var(--accent);
       border-color: var(--accent);
       transform: translateY(-1px);
     }
-    .toolbar-btn.active { 
+
+    .toolbar-btn.active {
       background: rgba(11, 92, 255, 0.15);
       color: var(--accent);
       border-color: var(--accent);
@@ -312,10 +356,12 @@
       border-bottom: 0px solid var(--border);
       background: var(--surface2);
     }
+
     .history-panel.open {
       max-height: 150px;
       border-bottom: 1px solid var(--border);
     }
+
     .history-inner {
       padding: 10px 16px;
       display: flex;
@@ -324,6 +370,7 @@
       overflow-y: auto;
       max-height: 150px;
     }
+
     .history-empty {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 0.85rem;
@@ -331,6 +378,7 @@
       padding: 6px 0;
       font-weight: 500;
     }
+
     .history-item {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 0.82rem;
@@ -344,13 +392,28 @@
       font-weight: 500;
       background: rgba(11, 92, 255, 0.05);
     }
-    .history-item:hover { 
+
+    .history-item:hover {
       background: rgba(11, 92, 255, 0.15);
       transform: translateX(2px);
     }
-    .history-item .h-expr { color: var(--accent); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .history-item .h-eq   { color: var(--text-dim); }
-    .history-item .h-res  { color: var(--green); font-weight: 600; }
+
+    .history-item .h-expr {
+      color: var(--accent);
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .history-item .h-eq {
+      color: var(--text-dim);
+    }
+
+    .history-item .h-res {
+      color: var(--green);
+      font-weight: 600;
+    }
 
     /* Button grid */
     .btn-grid {
@@ -360,6 +423,7 @@
       background: var(--surface2);
       padding: 8px;
     }
+
     .btn {
       border: none;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -376,12 +440,14 @@
       background: var(--btn-num-bg);
       border-radius: 16px;
     }
-    .btn:hover  { 
+
+    .btn:hover {
       background: var(--btn-num-hover);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
-    .btn:active { 
+
+    .btn:active {
       transform: translateY(0);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
@@ -396,24 +462,58 @@
       transition: opacity 0.1s;
       border-radius: 16px;
     }
-    .btn:active::after { opacity: 1; }
 
-    .btn.op     { background: var(--btn-op-bg); }
-    .btn.op:hover { background: var(--btn-op-hover); }
+    .btn:active::after {
+      opacity: 1;
+    }
 
-    .btn.sci    { background: var(--btn-sci-bg); font-size: 0.95rem; }
-    .btn.sci:hover { background: var(--btn-sci-hover); }
+    .btn.op {
+      background: var(--btn-op-bg);
+    }
 
-    .btn.action { background: var(--btn-action-bg); }
-    .btn.action:hover { background: var(--btn-action-hover); }
+    .btn.op:hover {
+      background: var(--btn-op-hover);
+    }
 
-    .btn.clear  { background: var(--btn-clear-bg); color: var(--red); }
-    .btn.clear:hover { background: var(--btn-clear-hover); }
+    .btn.sci {
+      background: var(--btn-sci-bg);
+      font-size: 0.95rem;
+    }
 
-    .btn.equals { background: var(--btn-eq-bg); color: var(--green); font-size: 1.3rem; }
-    .btn.equals:hover { background: var(--btn-eq-hover); }
+    .btn.sci:hover {
+      background: var(--btn-sci-hover);
+    }
 
-    .btn.span2  { grid-column: span 2; }
+    .btn.action {
+      background: var(--btn-action-bg);
+    }
+
+    .btn.action:hover {
+      background: var(--btn-action-hover);
+    }
+
+    .btn.clear {
+      background: var(--btn-clear-bg);
+      color: var(--red);
+    }
+
+    .btn.clear:hover {
+      background: var(--btn-clear-hover);
+    }
+
+    .btn.equals {
+      background: var(--btn-eq-bg);
+      color: var(--green);
+      font-size: 1.3rem;
+    }
+
+    .btn.equals:hover {
+      background: var(--btn-eq-hover);
+    }
+
+    .btn.span2 {
+      grid-column: span 2;
+    }
 
     /* No-voice notice */
     .no-voice-notice {
@@ -429,412 +529,410 @@
     }
   </style>
 </head>
+
 <body>
 
-<div class="wrapper">
-  <header>
-    <h1>Voice<span>Calc</span></h1>
-    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Dark mode toggle">
-      <svg id="sunIcon" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
-  </header>
+  <div class="wrapper">
+    <header>
 
-  <div class="calc">
-
-    <!-- Display -->
-    <div class="display">
-      <div class="expr-line" id="exprEl"></div>
-      <div class="result-line" id="resultEl">0</div>
-    </div>
-
-    <!-- Voice bar -->
-    <div class="voice-bar">
-      <button class="voice-btn" id="voiceBtn" title="Start voice input" aria-label="Voice input">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-          <line x1="12" y1="19" x2="12" y2="23"/>
-          <line x1="8" y1="23" x2="16" y2="23"/>
-        </svg>
+      <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Dark mode toggle">
+        <h1>Voice<span>Calc</span></h1>
       </button>
-      <div class="voice-text" id="voiceText">Tap mic — say "five plus three"</div>
-    </div>
+    </header>
 
-    <div class="no-voice-notice" id="noVoiceNotice">Voice input not supported. Use Chrome or Edge.</div>
+    <div class="calc">
 
-    <!-- Toolbar -->
-    <div class="toolbar">
-      <button class="toolbar-btn" id="sciToggle">SCI MODE</button>
-      <button class="toolbar-btn" id="historyToggle">HISTORY</button>
-      <button class="toolbar-btn" id="clearHistory">CLEAR HIST</button>
-    </div>
-
-    <!-- History panel -->
-    <div class="history-panel" id="historyPanel">
-      <div class="history-inner" id="historyInner">
-        <div class="history-empty">No history yet.</div>
+      <!-- Display -->
+      <div class="display">
+        <div class="expr-line" id="exprEl"></div>
+        <div class="result-line" id="resultEl">0</div>
       </div>
+
+      <!-- Voice bar -->
+      <div class="voice-bar">
+        <button class="voice-btn" id="voiceBtn" title="Start voice input" aria-label="Voice input">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+            <line x1="12" y1="19" x2="12" y2="23" />
+            <line x1="8" y1="23" x2="16" y2="23" />
+          </svg>
+        </button>
+        <div class="voice-text" id="voiceText">Tap mic — say "five plus three"</div>
+      </div>
+
+      <div class="no-voice-notice" id="noVoiceNotice">Voice input not supported. Use Chrome or Edge.</div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <button class="toolbar-btn" id="sciToggle">SCI MODE</button>
+        <button class="toolbar-btn" id="historyToggle">HISTORY</button>
+        <button class="toolbar-btn" id="clearHistory">CLEAR HIST</button>
+      </div>
+
+      <!-- History panel -->
+      <div class="history-panel" id="historyPanel">
+        <div class="history-inner" id="historyInner">
+          <div class="history-empty">No history yet.</div>
+        </div>
+      </div>
+
+      <!-- Basic buttons -->
+      <div class="btn-grid" id="basicGrid">
+        <button class="btn action" data-action="del">DEL</button>
+        <button class="btn action clear" data-action="clear">AC</button>
+        <button class="btn action" data-action="pct">%</button>
+        <button class="btn op" data-val="/">÷</button>
+
+        <button class="btn" data-val="7">7</button>
+        <button class="btn" data-val="8">8</button>
+        <button class="btn" data-val="9">9</button>
+        <button class="btn op" data-val="*">×</button>
+
+        <button class="btn" data-val="4">4</button>
+        <button class="btn" data-val="5">5</button>
+        <button class="btn" data-val="6">6</button>
+        <button class="btn op" data-val="-">−</button>
+
+        <button class="btn" data-val="1">1</button>
+        <button class="btn" data-val="2">2</button>
+        <button class="btn" data-val="3">3</button>
+        <button class="btn op" data-val="+">+</button>
+
+        <button class="btn span2" data-val="0">0</button>
+        <button class="btn" data-val=".">.</button>
+        <button class="btn equals" data-action="eq">=</button>
+      </div>
+
+      <!-- Scientific buttons (hidden by default) -->
+      <div class="btn-grid" id="sciGrid" style="display:none">
+        <button class="btn action" data-action="del">DEL</button>
+        <button class="btn action clear" data-action="clear">AC</button>
+        <button class="btn action" data-action="pct">%</button>
+        <button class="btn op" data-val="/">÷</button>
+
+        <button class="btn sci" data-func="sin">sin</button>
+        <button class="btn sci" data-func="cos">cos</button>
+        <button class="btn sci" data-func="tan">tan</button>
+        <button class="btn op" data-val="*">×</button>
+
+        <button class="btn sci" data-func="log">log</button>
+        <button class="btn sci" data-func="ln">ln</button>
+        <button class="btn sci" data-func="sqrt">√</button>
+        <button class="btn op" data-val="-">−</button>
+
+        <button class="btn sci" data-func="abs">|x|</button>
+        <button class="btn sci" data-const="pi">π</button>
+        <button class="btn sci" data-const="e">e</button>
+        <button class="btn op" data-val="+">+</button>
+
+        <button class="btn" data-val="("> ( </button>
+        <button class="btn" data-val=")"> ) </button>
+        <button class="btn op" data-val="^">xʸ</button>
+        <button class="btn equals" data-action="eq">=</button>
+      </div>
+
     </div>
-
-    <!-- Basic buttons -->
-    <div class="btn-grid" id="basicGrid">
-      <button class="btn action" data-action="del">DEL</button>
-      <button class="btn action clear" data-action="clear">AC</button>
-      <button class="btn action" data-action="pct">%</button>
-      <button class="btn op" data-val="/">÷</button>
-
-      <button class="btn" data-val="7">7</button>
-      <button class="btn" data-val="8">8</button>
-      <button class="btn" data-val="9">9</button>
-      <button class="btn op" data-val="*">×</button>
-
-      <button class="btn" data-val="4">4</button>
-      <button class="btn" data-val="5">5</button>
-      <button class="btn" data-val="6">6</button>
-      <button class="btn op" data-val="-">−</button>
-
-      <button class="btn" data-val="1">1</button>
-      <button class="btn" data-val="2">2</button>
-      <button class="btn" data-val="3">3</button>
-      <button class="btn op" data-val="+">+</button>
-
-      <button class="btn span2" data-val="0">0</button>
-      <button class="btn" data-val=".">.</button>
-      <button class="btn equals" data-action="eq">=</button>
-    </div>
-
-    <!-- Scientific buttons (hidden by default) -->
-    <div class="btn-grid" id="sciGrid" style="display:none">
-      <button class="btn action" data-action="del">DEL</button>
-      <button class="btn action clear" data-action="clear">AC</button>
-      <button class="btn action" data-action="pct">%</button>
-      <button class="btn op" data-val="/">÷</button>
-
-      <button class="btn sci" data-func="sin">sin</button>
-      <button class="btn sci" data-func="cos">cos</button>
-      <button class="btn sci" data-func="tan">tan</button>
-      <button class="btn op" data-val="*">×</button>
-
-      <button class="btn sci" data-func="log">log</button>
-      <button class="btn sci" data-func="ln">ln</button>
-      <button class="btn sci" data-func="sqrt">√</button>
-      <button class="btn op" data-val="-">−</button>
-
-      <button class="btn sci" data-func="abs">|x|</button>
-      <button class="btn sci" data-const="pi">π</button>
-      <button class="btn sci" data-const="e">e</button>
-      <button class="btn op" data-val="+">+</button>
-
-      <button class="btn" data-val="("> ( </button>
-      <button class="btn" data-val=")"> ) </button>
-      <button class="btn op" data-val="^">xʸ</button>
-      <button class="btn equals" data-action="eq">=</button>
-    </div>
-
   </div>
-</div>
 
-<script>
-  const exprEl    = document.getElementById('exprEl');
-  const resultEl  = document.getElementById('resultEl');
-  const voiceBtn  = document.getElementById('voiceBtn');
-  const voiceText = document.getElementById('voiceText');
+  <script>
+    const exprEl = document.getElementById('exprEl');
+    const resultEl = document.getElementById('resultEl');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const voiceText = document.getElementById('voiceText');
 
-  let current = '';
-  let justEvaluated = false;
+    let current = '';
+    let justEvaluated = false;
 
-  // ── Display ──────────────────────────────────────────────────────────────
-  function setDisplay(expr, result, isError = false) {
-    exprEl.textContent = expr;
-    exprEl.className = 'expr-line' + (isError ? ' error' : '');
-    resultEl.textContent = result;
-    resultEl.classList.remove('flash');
-    void resultEl.offsetWidth; // reflow to restart animation
-    resultEl.classList.add('flash');
-  }
-
-  // ── Input ─────────────────────────────────────────────────────────────────
-  function append(val) {
-    const isOperator = '+-*/^'.includes(val);
-    if (justEvaluated) {
-      // After a result: operator continues from result, digit starts fresh
-      if (!isOperator) current = '';
-      justEvaluated = false;
+    // ── Display ──────────────────────────────────────────────────────────────
+    function setDisplay(expr, result, isError = false) {
+      exprEl.textContent = expr;
+      exprEl.className = 'expr-line' + (isError ? ' error' : '');
+      resultEl.textContent = result;
+      resultEl.classList.remove('flash');
+      void resultEl.offsetWidth; // reflow to restart animation
+      resultEl.classList.add('flash');
     }
-    current += val;
-    setDisplay(current, current || '0');
-  }
 
-  function appendFunc(fn) {
-    if (justEvaluated) { current = ''; justEvaluated = false; }
-    current += fn + '(';
-    setDisplay(current, current || '0');
-  }
-
-  function appendConst(c) {
-    if (justEvaluated) { current = ''; justEvaluated = false; }
-    current += c;
-    setDisplay(current, current || '0');
-  }
-
-  // ── Calculate ─────────────────────────────────────────────────────────────
-  async function calculate() {
-    if (!current) return;
-    const expr = current;
-    try {
-      const res  = await fetch('/calculate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ expression: expr })
-      });
-      const data = await res.json();
-      if (data.error) {
-        setDisplay(expr, data.error, true);
-        current = '';
-      } else {
-        setDisplay(expr + ' =', String(data.result));
-        current = String(data.result);
-        justEvaluated = true;
-        addHistory(expr, data.result);
+    // ── Input ─────────────────────────────────────────────────────────────────
+    function append(val) {
+      const isOperator = '+-*/^'.includes(val);
+      if (justEvaluated) {
+        // After a result: operator continues from result, digit starts fresh
+        if (!isOperator) current = '';
+        justEvaluated = false;
       }
-    } catch {
-      setDisplay(expr, 'Connection error', true);
-    }
-  }
-
-  // ── History ───────────────────────────────────────────────────────────────
-  let history = [];
-  try { history = JSON.parse(localStorage.getItem('vcHistory') || '[]'); } catch {}
-
-  const historyInner  = document.getElementById('historyInner');
-  const historyPanel  = document.getElementById('historyPanel');
-  const historyToggle = document.getElementById('historyToggle');
-  const clearHistBtn  = document.getElementById('clearHistory');
-
-  function renderHistory() {
-    if (!history.length) {
-      historyInner.innerHTML = '<div class="history-empty">No history yet.</div>';
-      return;
-    }
-    historyInner.innerHTML = '';
-    history.forEach((h, i) => {
-      const item = document.createElement('div');
-      item.className = 'history-item';
-      item.innerHTML =
-        `<span class="h-expr">${escHtml(String(h.expr))}</span>` +
-        `<span class="h-eq">=</span>` +
-        `<span class="h-res">${escHtml(String(h.result))}</span>`;
-      item.addEventListener('click', () => {
-        current = String(h.result);
-        justEvaluated = true;
-        setDisplay(h.expr + ' =', String(h.result));
-      });
-      historyInner.appendChild(item);
-    });
-  }
-
-  function addHistory(expr, result) {
-    history.unshift({ expr, result });
-    if (history.length > 20) history.length = 20;
-    try { localStorage.setItem('vcHistory', JSON.stringify(history)); } catch {}
-    renderHistory();
-  }
-
-  function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  historyToggle.addEventListener('click', () => {
-    const open = historyPanel.classList.toggle('open');
-    historyToggle.classList.toggle('active', open);
-  });
-
-  clearHistBtn.addEventListener('click', () => {
-    history = [];
-    try { localStorage.removeItem('vcHistory'); } catch {}
-    renderHistory();
-  });
-
-  renderHistory();
-
-  // ── Sci toggle ────────────────────────────────────────────────────────────
-  const sciToggle = document.getElementById('sciToggle');
-  const basicGrid = document.getElementById('basicGrid');
-  const sciGrid   = document.getElementById('sciGrid');
-  let sciMode = false;
-
-  sciToggle.addEventListener('click', () => {
-    sciMode = !sciMode;
-    basicGrid.style.display = sciMode ? 'none' : 'grid';
-    sciGrid.style.display   = sciMode ? 'grid' : 'none';
-    sciToggle.classList.toggle('active', sciMode);
-  });
-
-  // ── Button handler ────────────────────────────────────────────────────────
-  function handleBtn(btn) {
-    const { val, action, func } = btn.dataset;
-    const c = btn.dataset.const;
-
-    if (val !== undefined)    { append(val); }
-    else if (func !== undefined) { appendFunc(func); }
-    else if (c !== undefined) { appendConst(c); }
-    else if (action === 'eq')    { calculate(); }
-    else if (action === 'del')   {
-      current = current.slice(0, -1);
-      justEvaluated = false;
+      current += val;
       setDisplay(current, current || '0');
     }
-    else if (action === 'clear') {
-      current = '';
-      justEvaluated = false;
-      setDisplay('', '0');
-    }
-    else if (action === 'pct') {
-      // Only apply % to a trailing number, not the whole expression
-      const m = current.match(/^(.*?)(-?\d*\.?\d+)$/);
-      if (m) {
-        current = m[1] + String(parseFloat(m[2]) / 100);
-        setDisplay(current, current);
-      }
-    }
-  }
 
-  document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('click', () => handleBtn(btn));
-  });
-
-  // ── Keyboard ──────────────────────────────────────────────────────────────
-  document.addEventListener('keydown', e => {
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
-    if ('0123456789.+-*/()^'.includes(e.key)) { append(e.key); }
-    else if (e.key === 'Enter' || e.key === '=') { calculate(); }
-    else if (e.key === 'Backspace') {
-      current = current.slice(0, -1);
-      justEvaluated = false;
+    function appendFunc(fn) {
+      if (justEvaluated) { current = ''; justEvaluated = false; }
+      current += fn + '(';
       setDisplay(current, current || '0');
     }
-    else if (e.key === 'Escape') {
-      current = '';
-      justEvaluated = false;
-      setDisplay('', '0');
+
+    function appendConst(c) {
+      if (justEvaluated) { current = ''; justEvaluated = false; }
+      current += c;
+      setDisplay(current, current || '0');
     }
-  });
 
-  // ── Voice ─────────────────────────────────────────────────────────────────
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) {
-    voiceBtn.disabled = true;
-    voiceBtn.style.opacity = '0.3';
-    document.getElementById('noVoiceNotice').style.display = 'block';
-  } else {
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
-    let listening = false;
-
-    recognition.onstart = () => {
-      listening = true;
-      voiceBtn.classList.add('listening');
-      voiceText.textContent = 'Listening…';
-      voiceText.className = 'voice-text active';
-    };
-
-    recognition.onresult = async (e) => {
-      const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
-      if (!e.results[e.results.length - 1].isFinal) {
-        voiceText.textContent = transcript + '…';
-        return;
-      }
-      voiceText.textContent = `"${transcript}"`;
+    // ── Calculate ─────────────────────────────────────────────────────────────
+    async function calculate() {
+      if (!current) return;
+      const expr = current;
       try {
-        const res  = await fetch('/voice', {
+        const res = await fetch('/calculate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ transcript })
+          body: JSON.stringify({ expression: expr })
         });
         const data = await res.json();
         if (data.error) {
-          voiceText.textContent = `Couldn't parse: "${transcript}"`;
-          voiceText.className = 'voice-text error';
+          setDisplay(expr, data.error, true);
+          current = '';
         } else {
+          setDisplay(expr + ' =', String(data.result));
           current = String(data.result);
           justEvaluated = true;
-          setDisplay(data.expression + ' =', String(data.result));
-          addHistory(data.expression, data.result);
-          voiceText.textContent = `✓ ${data.expression} = ${data.result}`;
-          voiceText.className = 'voice-text success';
-          setTimeout(() => {
-            voiceText.textContent = 'Tap mic — say "five plus three"';
-            voiceText.className = 'voice-text';
-          }, 3000);
+          addHistory(expr, data.result);
         }
       } catch {
-        voiceText.textContent = 'Connection error';
-        voiceText.className = 'voice-text error';
+        setDisplay(expr, 'Connection error', true);
       }
-    };
+    }
 
-    recognition.onerror = (e) => {
-      voiceText.textContent = e.error === 'not-allowed' ? 'Mic access denied' : 'Voice error — try again';
-      voiceText.className = 'voice-text error';
-    };
+    // ── History ───────────────────────────────────────────────────────────────
+    let history = [];
+    try { history = JSON.parse(localStorage.getItem('vcHistory') || '[]'); } catch { }
 
-    recognition.onend = () => {
-      listening = false;
-      voiceBtn.classList.remove('listening');
-    };
+    const historyInner = document.getElementById('historyInner');
+    const historyPanel = document.getElementById('historyPanel');
+    const historyToggle = document.getElementById('historyToggle');
+    const clearHistBtn = document.getElementById('clearHistory');
 
-    voiceBtn.addEventListener('click', () => {
-      if (listening) recognition.stop();
-      else try { recognition.start(); } catch {}
+    function renderHistory() {
+      if (!history.length) {
+        historyInner.innerHTML = '<div class="history-empty">No history yet.</div>';
+        return;
+      }
+      historyInner.innerHTML = '';
+      history.forEach((h, i) => {
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.innerHTML =
+          `<span class="h-expr">${escHtml(String(h.expr))}</span>` +
+          `<span class="h-eq">=</span>` +
+          `<span class="h-res">${escHtml(String(h.result))}</span>`;
+        item.addEventListener('click', () => {
+          current = String(h.result);
+          justEvaluated = true;
+          setDisplay(h.expr + ' =', String(h.result));
+        });
+        historyInner.appendChild(item);
+      });
+    }
+
+    function addHistory(expr, result) {
+      history.unshift({ expr, result });
+      if (history.length > 20) history.length = 20;
+      try { localStorage.setItem('vcHistory', JSON.stringify(history)); } catch { }
+      renderHistory();
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    historyToggle.addEventListener('click', () => {
+      const open = historyPanel.classList.toggle('open');
+      historyToggle.classList.toggle('active', open);
     });
-  }
 
-  // ── Dark Mode ──────────────────────────────────────────────────────────────
-  const themeToggle = document.getElementById('themeToggle');
-  const sunIcon = document.getElementById('sunIcon');
-  const moonIcon = document.getElementById('moonIcon');
+    clearHistBtn.addEventListener('click', () => {
+      history = [];
+      try { localStorage.removeItem('vcHistory'); } catch { }
+      renderHistory();
+    });
 
-  // Initialize dark mode from localStorage
-  function initDarkMode() {
-    const isDarkMode = localStorage.getItem('darkMode') === 'true' || 
-                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && 
-                       localStorage.getItem('darkMode') === null);
-    
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark-mode');
-      sunIcon.style.display = 'block';
-      moonIcon.style.display = 'none';
-    } else {
-      document.documentElement.classList.remove('dark-mode');
-      sunIcon.style.display = 'none';
-      moonIcon.style.display = 'block';
+    renderHistory();
+
+    // ── Sci toggle ────────────────────────────────────────────────────────────
+    const sciToggle = document.getElementById('sciToggle');
+    const basicGrid = document.getElementById('basicGrid');
+    const sciGrid = document.getElementById('sciGrid');
+    let sciMode = false;
+
+    sciToggle.addEventListener('click', () => {
+      sciMode = !sciMode;
+      basicGrid.style.display = sciMode ? 'none' : 'grid';
+      sciGrid.style.display = sciMode ? 'grid' : 'none';
+      sciToggle.classList.toggle('active', sciMode);
+    });
+
+    // ── Button handler ────────────────────────────────────────────────────────
+    function handleBtn(btn) {
+      const { val, action, func } = btn.dataset;
+      const c = btn.dataset.const;
+
+      if (val !== undefined) { append(val); }
+      else if (func !== undefined) { appendFunc(func); }
+      else if (c !== undefined) { appendConst(c); }
+      else if (action === 'eq') { calculate(); }
+      else if (action === 'del') {
+        current = current.slice(0, -1);
+        justEvaluated = false;
+        setDisplay(current, current || '0');
+      }
+      else if (action === 'clear') {
+        current = '';
+        justEvaluated = false;
+        setDisplay('', '0');
+      }
+      else if (action === 'pct') {
+        // Only apply % to a trailing number, not the whole expression
+        const m = current.match(/^(.*?)(-?\d*\.?\d+)$/);
+        if (m) {
+          current = m[1] + String(parseFloat(m[2]) / 100);
+          setDisplay(current, current);
+        }
+      }
     }
-  }
 
-  // Toggle dark mode
-  themeToggle.addEventListener('click', () => {
-    const hasDarkMode = document.documentElement.classList.contains('dark-mode');
-    const newDarkMode = !hasDarkMode;
-    
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark-mode');
-      localStorage.setItem('darkMode', 'true');
-      sunIcon.style.display = 'block';
-      moonIcon.style.display = 'none';
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', () => handleBtn(btn));
+    });
+
+    // ── Keyboard ──────────────────────────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if ('0123456789.+-*/()^'.includes(e.key)) { append(e.key); }
+      else if (e.key === 'Enter' || e.key === '=') { calculate(); }
+      else if (e.key === 'Backspace') {
+        current = current.slice(0, -1);
+        justEvaluated = false;
+        setDisplay(current, current || '0');
+      }
+      else if (e.key === 'Escape') {
+        current = '';
+        justEvaluated = false;
+        setDisplay('', '0');
+      }
+    });
+
+    // ── Voice ─────────────────────────────────────────────────────────────────
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      voiceBtn.disabled = true;
+      voiceBtn.style.opacity = '0.3';
+      document.getElementById('noVoiceNotice').style.display = 'block';
     } else {
-      document.documentElement.classList.remove('dark-mode');
-      localStorage.setItem('darkMode', 'false');
-      sunIcon.style.display = 'none';
-      moonIcon.style.display = 'block';
-    }
-  });
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+      let listening = false;
 
-  // Initialize on load
-  initDarkMode();
-</script>
+      recognition.onstart = () => {
+        listening = true;
+        voiceBtn.classList.add('listening');
+        voiceText.textContent = 'Listening…';
+        voiceText.className = 'voice-text active';
+      };
+
+      recognition.onresult = async (e) => {
+        const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+        if (!e.results[e.results.length - 1].isFinal) {
+          voiceText.textContent = transcript + '…';
+          return;
+        }
+        voiceText.textContent = `"${transcript}"`;
+        try {
+          const res = await fetch('/voice', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ transcript })
+          });
+          const data = await res.json();
+          if (data.error) {
+            voiceText.textContent = `Couldn't parse: "${transcript}"`;
+            voiceText.className = 'voice-text error';
+          } else {
+            current = String(data.result);
+            justEvaluated = true;
+            setDisplay(data.expression + ' =', String(data.result));
+            addHistory(data.expression, data.result);
+            voiceText.textContent = `✓ ${data.expression} = ${data.result}`;
+            voiceText.className = 'voice-text success';
+            setTimeout(() => {
+              voiceText.textContent = 'Tap mic — say "five plus three"';
+              voiceText.className = 'voice-text';
+            }, 3000);
+          }
+        } catch {
+          voiceText.textContent = 'Connection error';
+          voiceText.className = 'voice-text error';
+        }
+      };
+
+      recognition.onerror = (e) => {
+        voiceText.textContent = e.error === 'not-allowed' ? 'Mic access denied' : 'Voice error — try again';
+        voiceText.className = 'voice-text error';
+      };
+
+      recognition.onend = () => {
+        listening = false;
+        voiceBtn.classList.remove('listening');
+      };
+
+      voiceBtn.addEventListener('click', () => {
+        if (listening) recognition.stop();
+        else try { recognition.start(); } catch { }
+      });
+    }
+
+    // ── Dark Mode ──────────────────────────────────────────────────────────────
+    const themeToggle = document.getElementById('themeToggle');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
+    const html = document.documentElement;
+
+    function updateTheme(isDark) {
+      if (isDark) {
+        html.classList.add('dark-mode');
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        html.classList.remove('dark-mode');
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    // Initialize theme on page load
+    function initTheme() {
+      const saved = localStorage.getItem('theme');
+      const isDark = saved ? saved === 'dark' :
+        (window.matchMedia('(prefers-color-scheme: dark)').matches);
+      updateTheme(isDark);
+    }
+
+    // Toggle theme on button click
+    themeToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isDark = !html.classList.contains('dark-mode');
+      updateTheme(isDark);
+    });
+
+    // Initialize on load
+    initTheme();
+
+  </script>
 </body>
+
 </html>
