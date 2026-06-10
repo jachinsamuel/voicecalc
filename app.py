@@ -1,47 +1,111 @@
-from flask import Flask, request, jsonify, render_template
+import ast
 import math
 import re
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
-# Allowed token pattern for expression validation
-_VALID_EXPR = re.compile(
-    r'^[\d+\-*/().%\s^!]|'
-    r'(math\.(sin|cos|tan|log10?|log|sqrt|factorial|fabs)|abs|round|pi|e)'
-)
+# Allowed functions and constants from the math module
+MATH_FUNCS = {
+    'sin': math.sin,
+    'cos': math.cos,
+    'tan': math.tan,
+    'log': math.log10,
+    'log10': math.log10,
+    'ln': math.log,
+    'sqrt': math.sqrt,
+    'factorial': math.factorial,
+    'abs': math.fabs,
+    'fabs': math.fabs
+}
+
+MATH_CONSTANTS = {
+    'pi': math.pi,
+    'e': math.e
+}
+
+class SafeEvaluator(ast.NodeVisitor):
+    def visit_BinOp(self, node):
+        left = self.visit(node.left)
+        right = self.visit(node.right)
+        if isinstance(node.op, ast.Add):
+            return left + right
+        elif isinstance(node.op, ast.Sub):
+            return left - right
+        elif isinstance(node.op, ast.Mult):
+            return left * right
+        elif isinstance(node.op, ast.Div):
+            if right == 0:
+                raise ZeroDivisionError("Division by zero")
+            return left / right
+        elif isinstance(node.op, ast.Pow):
+            if right > 100 or left > 10000:  # Prevent huge numbers from crashing the server
+                raise ValueError("Exponent or base too large")
+            return left ** right
+        elif isinstance(node.op, ast.Mod):
+            return left % right
+        raise ValueError(f"Unsupported operator: {type(node.op).__name__}")
+        
+    def visit_UnaryOp(self, node):
+        operand = self.visit(node.operand)
+        if isinstance(node.op, ast.UAdd):
+            return +operand
+        elif isinstance(node.op, ast.USub):
+            return -operand
+        raise ValueError(f"Unsupported unary operator: {type(node.op).__name__}")
+        
+    def visit_Call(self, node):
+        if not isinstance(node.func, ast.Name):
+            raise ValueError("Only simple function calls are allowed")
+        func_name = node.func.id
+        if func_name not in MATH_FUNCS:
+            raise ValueError(f"Unsupported function: {func_name}")
+        args = [self.visit(arg) for arg in node.args]
+        return MATH_FUNCS[func_name](*args)
+        
+    def visit_Constant(self, node):
+        if isinstance(node.value, (int, float)):
+            return node.value
+        raise ValueError("Only numeric constants are allowed")
+        
+    def visit_Name(self, node):
+        if node.id in MATH_CONSTANTS:
+            return MATH_CONSTANTS[node.id]
+        raise ValueError(f"Unsupported variable: {node.id}")
+        
+    def visit_Expr(self, node):
+        return self.visit(node.value)
+        
+    def generic_visit(self, node):
+        raise ValueError(f"Unsupported expression construct: {type(node).__name__}")
 
 def safe_calculate(expression):
-    """Safely evaluate arithmetic expressions with scientific functions."""
+    """Safely evaluate arithmetic expressions using an AST."""
     expression = expression.strip()
+    if not expression:
+        raise ValueError("Empty expression")
 
-    # Replace scientific function names BEFORE validation
-    expression = expression.replace('sqrt(', 'math.sqrt(')
-    expression = expression.replace('sin(', 'math.sin(')
-    expression = expression.replace('cos(', 'math.cos(')
-    expression = expression.replace('tan(', 'math.tan(')
-    expression = expression.replace('log(', 'math.log10(')
-    expression = expression.replace('ln(', 'math.log(')
-    expression = expression.replace('abs(', 'math.fabs(')
+    # Replace specific symbols for python syntax
     expression = expression.replace('^', '**')
-    expression = expression.replace('pi', str(math.pi))
-    expression = expression.replace('e', str(math.e))
+    # Handle factorial (e.g., 5! -> factorial(5))
+    expression = re.sub(r'(\d+(?:\.\d+)?)!', r'factorial(\1)', expression)
 
-    # Handle factorial: e.g. 5! → math.factorial(5)
-    expression = re.sub(r'(\d+)!', lambda m: f'math.factorial({m.group(1)})', expression)
-
-    # Validate: only digits, operators, parens, dots, spaces, and math.* calls
-    if not re.match(r'^[\d+\-*/().\s**]+$',
-                    re.sub(r'math\.(sin|cos|tan|log10|log|sqrt|factorial|fabs)\b', '', expression)):
-        raise ValueError("Invalid characters in expression")
-
-    safe_dict = {"__builtins__": {}, "math": math}
-    result = eval(expression, safe_dict)  # nosec
-
-    if isinstance(result, float) and result.is_integer():
-        return int(result)
-    if isinstance(result, float):
-        return round(result, 10)
-    return result
+    try:
+        tree = ast.parse(expression, mode='eval')
+        evaluator = SafeEvaluator()
+        result = evaluator.visit(tree.body)
+        
+        if isinstance(result, float) and result.is_integer():
+            return int(result)
+        if isinstance(result, float):
+            return round(result, 10)
+        return result
+    except SyntaxError:
+        raise ValueError("Invalid syntax")
+    except ZeroDivisionError:
+        raise
+    except Exception as e:
+        raise ValueError(str(e))
 
 
 @app.route('/')

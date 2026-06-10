@@ -5,7 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VoiceCalc</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *,
     *::before,
@@ -16,184 +18,154 @@
     }
 
     :root {
-      --bg-from: #f5f5f7;
-      --bg-to: #e8e8ed;
-      --surface: rgba(255, 255, 255, 0.85);
-      --surface2: rgba(245, 245, 250, 0.95);
-      --border: rgba(0, 0, 0, 0.08);
-      --accent: #0b5cff;
-      --accent2: #6a5aff;
-      --text: #1a1a1a;
-      --text-dim: #6c6c70;
-      --green: #31a24c;
-      --red: #f85462;
-      --btn-num-bg: #f0f0f5;
-      --btn-num-hover: #e4e4ec;
-      --btn-op-bg: #e8e8f5;
-      --btn-op-hover: #dcdce8;
-      --btn-sci-bg: #e0e0f0;
-      --btn-sci-hover: #d4d4e8;
-      --btn-eq-bg: #e8f5f0;
-      --btn-eq-hover: #d0e8e0;
-      --btn-clear-bg: #ffe8e8;
-      --btn-clear-hover: #ffd6d6;
-      --btn-action-bg: #e8ecff;
-      --btn-action-hover: #dce0ff;
+      /* Light Mode - Ultra Premium */
+      --bg-from: #f0f2f5;
+      --bg-to: #dfe3eb;
+      --surface: rgba(255, 255, 255, 0.75);
+      --surface2: rgba(255, 255, 255, 0.9);
+      --border: rgba(255, 255, 255, 0.5);
+      --shadow: rgba(0, 0, 0, 0.05);
+      --shadow-strong: rgba(0, 0, 0, 0.1);
+      
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent2: #8b5cf6;
+      
+      --text: #0f172a;
+      --text-dim: #64748b;
+      
+      --green: #10b981;
+      --red: #ef4444;
+      
+      --btn-num-bg: rgba(255, 255, 255, 0.8);
+      --btn-num-hover: rgba(255, 255, 255, 1);
+      --btn-op-bg: rgba(235, 240, 255, 0.8);
+      --btn-op-hover: rgba(219, 230, 255, 1);
+      --btn-sci-bg: rgba(241, 245, 249, 0.8);
+      --btn-sci-hover: rgba(226, 232, 240, 1);
+      --btn-eq-bg: #2563eb;
+      --btn-eq-text: #ffffff;
+      --btn-eq-hover: #1d4ed8;
+      
+      --btn-clear-bg: rgba(254, 226, 226, 0.8);
+      --btn-clear-text: #ef4444;
+      --btn-clear-hover: rgba(254, 202, 202, 1);
+      
+      --btn-action-bg: rgba(224, 231, 255, 0.8);
+      --btn-action-hover: rgba(199, 210, 254, 1);
     }
 
-    /* Dark Mode Colors */
-    @media (prefers-color-scheme: light) {
-      :root {
-        --bg-from: #0d0d1a;
-        --bg-to: #1a1a2e;
-        --surface: rgba(20, 20, 40, 0.9);
-        --surface2: rgba(25, 25, 45, 0.95);
-        --border: rgba(255, 255, 255, 0.08);
-        --accent: #5a9fff;
-        --accent2: #8b7aff;
-        --text: #f0f0ff;
-        --text-dim: #b0b0c0;
-        --green: #4fc85f;
-        --red: #fc6271;
-        --btn-num-bg: #1a1a3a;
-        --btn-num-hover: #242450;
-        --btn-op-bg: #2a1a4a;
-        --btn-op-hover: #3a2a5a;
-        --btn-sci-bg: #1a2a4a;
-        --btn-sci-hover: #2a3a5a;
-        --btn-eq-bg: #1a3a3a;
-        --btn-eq-hover: #2a4a4a;
-        --btn-clear-bg: #3a1a1a;
-        --btn-clear-hover: #4a2a2a;
-        --btn-action-bg: #1a1a5a;
-        --btn-action-hover: #2a2a7a;
-      }
-    }
-
-    /* Force dark mode with class on html element */
     html.dark-mode {
       color-scheme: dark;
-      --bg-from: #0d0d1a;
-      --bg-to: #1a1a2e;
-      --surface: rgba(20, 20, 40, 0.9);
-      --surface2: rgba(25, 25, 45, 0.95);
-      --border: rgba(255, 255, 255, 0.08);
-      --accent: #5a9fff;
-      --accent2: #8b7aff;
-      --text: #f0f0ff;
-      --text-dim: #b0b0c0;
-      --green: #4fc85f;
-      --red: #ff6b7a;
-      --btn-num-bg: #1a1a3a;
-      --btn-num-hover: #242450;
-      --btn-op-bg: #2a1a4a;
-      --btn-op-hover: #3a2a5a;
-      --btn-sci-bg: #1a2a4a;
-      --btn-sci-hover: #2a3a5a;
-      --btn-eq-bg: #1a3a3a;
-      --btn-eq-hover: #2a4a4a;
-      --btn-clear-bg: #3a1a1a;
-      --btn-clear-hover: #4a2a2a;
-      --btn-action-bg: #1a1a5a;
-      --btn-action-hover: #2a2a7a;
+      /* Dark Mode - Deep Space */
+      --bg-from: #09090b;
+      --bg-to: #18181b;
+      --surface: rgba(39, 39, 42, 0.6);
+      --surface2: rgba(39, 39, 42, 0.85);
+      --border: rgba(255, 255, 255, 0.05);
+      --shadow: rgba(0, 0, 0, 0.3);
+      --shadow-strong: rgba(0, 0, 0, 0.5);
+      
+      --accent: #3b82f6;
+      --accent-hover: #60a5fa;
+      --accent2: #a78bfa;
+      
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+      
+      --green: #34d399;
+      --red: #fb7185;
+      
+      --btn-num-bg: rgba(63, 63, 70, 0.5);
+      --btn-num-hover: rgba(82, 82, 91, 0.8);
+      --btn-op-bg: rgba(59, 130, 246, 0.15);
+      --btn-op-hover: rgba(59, 130, 246, 0.25);
+      --btn-sci-bg: rgba(39, 39, 42, 0.7);
+      --btn-sci-hover: rgba(63, 63, 70, 0.9);
+      --btn-eq-bg: #3b82f6;
+      --btn-eq-text: #ffffff;
+      --btn-eq-hover: #2563eb;
+      
+      --btn-clear-bg: rgba(225, 29, 72, 0.15);
+      --btn-clear-text: #fb7185;
+      --btn-clear-hover: rgba(225, 29, 72, 0.25);
+      
+      --btn-action-bg: rgba(139, 92, 246, 0.15);
+      --btn-action-hover: rgba(139, 92, 246, 0.25);
     }
 
     body {
       background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
       background-attachment: fixed;
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      transition: background 0.4s ease, color 0.4s ease;
     }
 
     .wrapper {
       width: 100%;
-      max-width: 390px;
+      max-width: 400px;
     }
 
     /* Header */
     header {
       text-align: center;
-      margin-bottom: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      position: relative;
+      margin-bottom: 24px;
     }
 
     header h1 {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 1.75rem;
-      font-weight: 600;
-      letter-spacing: -0.5px;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: -0.04em;
       color: var(--text);
+      display: inline-block;
+      text-shadow: 0 2px 10px var(--shadow);
     }
 
     header h1 span {
       color: var(--accent);
     }
 
-    .theme-toggle {
-      position: absolute;
-      left: 50%;
-      width: 44px;
-      height: 44px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: none;
-      border: none;
-    }
-
-
-    .theme-toggle:hover {
-      transform: scale(1.05);
-    }
-
-    .theme-toggle.active {
-      background: none;
-    }
-
-
     /* Card */
     .calc {
       background: var(--surface);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--border);
-      border-radius: 40px;
+      border-radius: 36px;
       overflow: hidden;
-      box-shadow:
-        0 2px 12px rgba(0, 0, 0, 0.08),
-        0 8px 24px rgba(0, 0, 0, 0.12);
+      box-shadow: 
+        0 10px 30px var(--shadow),
+        0 20px 60px var(--shadow-strong),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: background 0.4s ease, border-color 0.4s ease;
     }
 
     /* Display */
     .display {
-      padding: 32px 24px 24px;
-      min-height: 130px;
+      padding: 40px 28px 28px;
+      min-height: 150px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+      background: transparent;
       border-bottom: 1px solid var(--border);
       position: relative;
     }
 
     .expr-line {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 0.95rem;
+      font-size: 1.1rem;
       color: var(--text-dim);
-      min-height: 20px;
+      min-height: 24px;
       word-break: break-all;
       transition: color 0.2s;
       font-weight: 500;
+      letter-spacing: -0.01em;
     }
 
     .expr-line.error {
@@ -201,96 +173,66 @@
     }
 
     .result-line {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 2.8rem;
+      font-size: 3.5rem;
       font-weight: 600;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.04em;
       word-break: break-all;
       line-height: 1.1;
-      margin-top: 4px;
-      transition: opacity 0.15s, transform 0.15s;
+      margin-top: 8px;
       color: var(--text);
-    }
-
-    .result-line.flash {
-      animation: flash 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    @keyframes flash {
-      0% {
-        opacity: 1;
-        transform: scale(1);
-      }
-
-      50% {
-        opacity: 0.7;
-        transform: scale(0.96);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+      transition: opacity 0.15s, transform 0.15s, color 0.4s ease;
     }
 
     /* Voice bar */
     .voice-bar {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 20px;
+      gap: 16px;
+      padding: 16px 24px;
       border-bottom: 1px solid var(--border);
       background: var(--surface2);
+      transition: background 0.4s ease;
     }
 
     .voice-btn {
-      width: 44px;
-      height: 44px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       border: none;
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
       color: white;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-      box-shadow: 0 4px 12px rgba(11, 92, 255, 0.3);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
     }
 
     .voice-btn:hover {
-      background: #0a4dcc;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(11, 92, 255, 0.35);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.4);
     }
 
     .voice-btn:active {
-      transform: translateY(0);
+      transform: translateY(0) scale(0.95);
     }
 
     .voice-btn.listening {
-      background: var(--accent2);
-      box-shadow: 0 4px 12px rgba(106, 90, 255, 0.3);
-      animation: mic-pulse 1.2s ease infinite;
+      background: linear-gradient(135deg, var(--accent2) 0%, #6d28d9 100%);
+      animation: mic-pulse 1.5s ease-out infinite;
     }
 
     @keyframes mic-pulse {
-
-      0%,
-      100% {
-        box-shadow: 0 4px 12px rgba(106, 90, 255, 0.3);
-      }
-
-      50% {
-        box-shadow: 0 6px 24px rgba(106, 90, 255, 0.5);
-      }
+      0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.6); }
+      70% { box-shadow: 0 0 0 20px rgba(139, 92, 246, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
     }
 
     .voice-text {
       flex: 1;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 0.88rem;
+      font-size: 0.95rem;
       color: var(--text-dim);
       overflow: hidden;
       text-overflow: ellipsis;
@@ -298,224 +240,154 @@
       font-weight: 500;
     }
 
-    .voice-text.active {
-      color: var(--accent2);
-    }
+    .voice-text.active { color: var(--accent2); }
+    .voice-text.success { color: var(--green); }
+    .voice-text.error { color: var(--red); }
 
-    .voice-text.success {
-      color: var(--green);
-    }
-
-    .voice-text.error {
-      color: var(--red);
-    }
-
-    /* Toolbar (sci toggle + clear history) */
+    /* Toolbar */
     .toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 16px;
+      padding: 12px 24px;
       border-bottom: 1px solid var(--border);
       background: var(--surface2);
-      gap: 8px;
+      transition: background 0.4s ease;
     }
 
     .toolbar-btn {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 0.76rem;
+      font-family: inherit;
+      font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 0.3px;
-      padding: 7px 14px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: transparent;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1px solid transparent;
+      background: var(--btn-num-bg);
       color: var(--text-dim);
       cursor: pointer;
-      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px var(--shadow);
     }
 
     .toolbar-btn:hover {
-      background: rgba(11, 92, 255, 0.08);
       color: var(--accent);
-      border-color: var(--accent);
+      background: var(--btn-num-hover);
       transform: translateY(-1px);
+      box-shadow: 0 4px 8px var(--shadow);
     }
 
     .toolbar-btn.active {
-      background: rgba(11, 92, 255, 0.15);
-      color: var(--accent);
-      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
     }
 
     /* History */
     .history-panel {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      border-bottom: 0px solid var(--border);
+      transition: max-height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
       background: var(--surface2);
     }
 
     .history-panel.open {
-      max-height: 150px;
+      max-height: 180px;
       border-bottom: 1px solid var(--border);
     }
 
     .history-inner {
-      padding: 10px 16px;
+      padding: 12px 20px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       overflow-y: auto;
-      max-height: 150px;
-    }
-
-    .history-empty {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      padding: 6px 0;
-      font-weight: 500;
+      max-height: 180px;
     }
 
     .history-item {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 0.82rem;
-      padding: 8px 12px;
-      border-radius: 12px;
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      border-radius: 14px;
       cursor: pointer;
       display: flex;
-      gap: 6px;
-      align-items: baseline;
-      transition: background 0.15s, transform 0.1s;
+      gap: 8px;
+      align-items: center;
+      transition: all 0.2s;
       font-weight: 500;
-      background: rgba(11, 92, 255, 0.05);
+      background: transparent;
+      border: 1px solid transparent;
     }
 
     .history-item:hover {
-      background: rgba(11, 92, 255, 0.15);
-      transform: translateX(2px);
+      background: var(--btn-op-bg);
+      border-color: var(--border);
+      transform: translateX(4px);
     }
 
-    .history-item .h-expr {
-      color: var(--accent);
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .history-item .h-eq {
-      color: var(--text-dim);
-    }
-
-    .history-item .h-res {
-      color: var(--green);
-      font-weight: 600;
-    }
+    .history-item .h-expr { color: var(--accent); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .history-item .h-eq { color: var(--text-dim); }
+    .history-item .h-res { color: var(--text); font-weight: 600; }
 
     /* Button grid */
     .btn-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      gap: 12px;
       background: var(--surface2);
-      padding: 8px;
+      padding: 24px;
+      transition: background 0.4s ease;
     }
 
     .btn {
-      border: none;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 1.1rem;
+      border: 1px solid var(--border);
+      font-family: inherit;
+      font-size: 1.25rem;
       font-weight: 600;
-      padding: 18px 0;
+      height: 64px;
+      border-radius: 20px;
       cursor: pointer;
       position: relative;
-      overflow: hidden;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
-      transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       color: var(--text);
       background: var(--btn-num-bg);
-      border-radius: 16px;
+      box-shadow: 0 4px 10px var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .btn:hover {
       background: var(--btn-num-hover);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 16px var(--shadow-strong);
     }
 
     .btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      transform: translateY(2px) scale(0.96);
+      box-shadow: 0 2px 4px var(--shadow);
     }
 
-    /* Ripple */
-    .btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.05);
-      opacity: 0;
-      transition: opacity 0.1s;
-      border-radius: 16px;
-    }
+    .btn.op { background: var(--btn-op-bg); color: var(--accent); font-size: 1.4rem; }
+    .btn.op:hover { background: var(--btn-op-hover); }
 
-    .btn:active::after {
-      opacity: 1;
-    }
+    .btn.sci { background: var(--btn-sci-bg); font-size: 1.05rem; font-weight: 500; }
+    .btn.sci:hover { background: var(--btn-sci-hover); }
 
-    .btn.op {
-      background: var(--btn-op-bg);
-    }
+    .btn.action { background: var(--btn-action-bg); color: var(--accent2); font-size: 1.1rem; }
+    .btn.action:hover { background: var(--btn-action-hover); }
 
-    .btn.op:hover {
-      background: var(--btn-op-hover);
-    }
+    .btn.clear { background: var(--btn-clear-bg); color: var(--btn-clear-text); }
+    .btn.clear:hover { background: var(--btn-clear-hover); }
 
-    .btn.sci {
-      background: var(--btn-sci-bg);
-      font-size: 0.95rem;
-    }
+    .btn.equals { background: var(--btn-eq-bg); color: var(--btn-eq-text); font-size: 1.5rem; border: none; box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3); }
+    .btn.equals:hover { background: var(--btn-eq-hover); box-shadow: 0 10px 24px rgba(37, 99, 235, 0.4); }
 
-    .btn.sci:hover {
-      background: var(--btn-sci-hover);
-    }
-
-    .btn.action {
-      background: var(--btn-action-bg);
-    }
-
-    .btn.action:hover {
-      background: var(--btn-action-hover);
-    }
-
-    .btn.clear {
-      background: var(--btn-clear-bg);
-      color: var(--red);
-    }
-
-    .btn.clear:hover {
-      background: var(--btn-clear-hover);
-    }
-
-    .btn.equals {
-      background: var(--btn-eq-bg);
-      color: var(--green);
-      font-size: 1.3rem;
-    }
-
-    .btn.equals:hover {
-      background: var(--btn-eq-hover);
-    }
-
-    .btn.span2 {
-      grid-column: span 2;
-    }
-
-    /* No-voice notice */
+    .btn.span2 { grid-column: span 2; border-radius: 24px; }
+    
     .no-voice-notice {
       display: none;
       padding: 10px 16px;
@@ -524,7 +396,7 @@
       text-align: center;
       background: rgba(248, 84, 98, 0.08);
       border-bottom: 1px solid var(--border);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: inherit;
       font-weight: 500;
     }
   </style>
@@ -534,10 +406,7 @@
 
   <div class="wrapper">
     <header>
-
-      <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Dark mode toggle">
-        <h1>Voice<span>Calc</span></h1>
-      </button>
+      <h1 id="themeToggle" title="Toggle dark mode" style="cursor: pointer; user-select: none; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Voice<span>Calc</span></h1>
     </header>
 
     <div class="calc">
@@ -896,20 +765,14 @@
 
     // ── Dark Mode ──────────────────────────────────────────────────────────────
     const themeToggle = document.getElementById('themeToggle');
-    const sunIcon = document.getElementById('sunIcon');
-    const moonIcon = document.getElementById('moonIcon');
     const html = document.documentElement;
 
     function updateTheme(isDark) {
       if (isDark) {
         html.classList.add('dark-mode');
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
         localStorage.setItem('theme', 'dark');
       } else {
         html.classList.remove('dark-mode');
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
         localStorage.setItem('theme', 'light');
       }
     }
